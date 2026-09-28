@@ -1,0 +1,4 @@
+TRACK  OP  MODE          STATE     CHANGES  LAST-CHANGE  RC             RTT(ms)
+1      13  reachability  up        2        47s ago      ok             4.000
+2      21  state         down->up  1        1h2m0s ago   overThreshold  150.000
+3      99  state         unknown   0        -            -              -

@@ -1,0 +1,16 @@
+[
+  {
+    "op_id": 21,
+    "element": "rtt",
+    "threshold_type": "xofy",
+    "upper": 100,
+    "lower": 50,
+    "x": 3,
+    "y": 5,
+    "action": "trap-and-syslog",
+    "occurred": true,
+    "value": 150,
+    "last_change": "2026-09-27T11:59:13Z",
+    "changes": 3
+  }
+]

@@ -1,0 +1,14 @@
+Operation 1 (icmp-jitter 10.100.2.11)
+INDEX  START     RTTs  MIN/AVG/MAX  SUCC  FAIL  OVERTH  TIMEOUT  BUSY  DROP  SEQERR  VERERR  SDJ    DSJ    LOSS  LATE  OOS
+2      11:00:00  396   0/0.404/3    40    0     0       0        0     0     0       0       0.286  0.057  4     1     2
+
+Operation 101 (icmp-echo 10.100.1.11)
+INDEX  START     RTTs  MIN/AVG/MAX  SUCC  FAIL  OVERTH  TIMEOUT  BUSY  DROP  SEQERR  VERERR
+1      10:00:00  59    1/2.000/9    58    2     1       1        0     0     0       0
+2      11:00:00  59    1/2.000/4    57    3     2       1        1     0     0       0
+
+Operation 102 (icmp-echo fd00:100:2::11)
+no hour groups
+
+Operation 103 (icmp-echo 10.100.1.13)
+no hour groups

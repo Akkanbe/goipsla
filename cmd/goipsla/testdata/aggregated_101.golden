@@ -1,0 +1,4 @@
+Operation 101 (icmp-echo 10.100.1.11)
+INDEX  START     RTTs  MIN/AVG/MAX  SUCC  FAIL  OVERTH  TIMEOUT  BUSY  DROP  SEQERR  VERERR
+1      10:00:00  59    1/2.000/9    58    2     1       1        0     0     0       0
+2      11:00:00  59    1/2.000/4    57    3     2       1        1     0     0       0

@@ -1,0 +1,4 @@
+Version:     1.2.3
+Started:     2026-09-27 10:30:00 UTC (up 1h30m0s)
+Config:      /etc/goipslad/goipslad.yaml
+Operations:  4 total, 3 active, 1 pending, 0 inactive

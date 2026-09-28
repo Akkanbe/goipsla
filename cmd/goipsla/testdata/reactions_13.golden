@@ -1,0 +1,3 @@
+OP  ELEMENT  TYPE         RISING  FALLING  COUNT  X/Y  ACTION  OCCURRED  VALUE  LAST-CHANGE
+13  rtt      immediate    100     50       -      -    syslog  false     1      -
+13  timeout  consecutive  -       -        2      -    syslog  true      1      47s ago

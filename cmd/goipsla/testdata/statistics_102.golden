@@ -1,0 +1,12 @@
+IPSLA operation id:            102
+Type of operation:             icmp-echo
+Target address:                fd00:100:2::11
+Tag:                           wan
+Latest RTT:                    NoConnection/Busy/Timeout
+Latest operation start time:   2026-09-27 11:59:53 UTC
+Latest operation return code:  Timeout
+Latest operation detail:       destination unreachable: host, from fd00:100:1::254
+Number of successes:           0
+Number of failures:            12
+Operational state:             active
+Life start:                    2026-09-27 10:00:00 UTC (life 1)

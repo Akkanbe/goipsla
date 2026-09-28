@@ -1,0 +1,84 @@
+{
+  "id": 101,
+  "type": "icmp-echo",
+  "target": "10.100.1.11",
+  "tag": "wan",
+  "vrf": "blue",
+  "state": "active",
+  "latest": {
+    "valid": true,
+    "seq": 120,
+    "start": "2026-09-27T11:57:50Z",
+    "end": "2026-09-27T11:57:50.001234Z",
+    "rtt_ms": 1.234,
+    "code": "ok"
+  },
+  "totals": {
+    "initiations": 120,
+    "completions": 118,
+    "over_thresholds": 3,
+    "timeouts": 2,
+    "busies": 0,
+    "drops": 0,
+    "sequence_errors": 0,
+    "verify_errors": 0,
+    "successes": 115,
+    "failures": 5,
+    "rtt_sum_ms": 236,
+    "rtt_sum2_ms": 600,
+    "rtt_min_ms": 1,
+    "rtt_max_ms": 9,
+    "rtt_avg_ms": 2,
+    "rtt_stddev_ms": 1.0415112878465909
+  },
+  "config": {
+    "id": 101,
+    "type": "icmp-echo",
+    "target": "10.100.1.11",
+    "target-name": "10.100.1.11",
+    "template": "wan-echo",
+    "source-interface": "eth1",
+    "vrf": "blue",
+    "tos": 184,
+    "frequency": "10s",
+    "timeout": "2000ms",
+    "threshold": "300ms",
+    "request-data-size": 28,
+    "data-pattern": "0xABCDABCD",
+    "verify-data": false,
+    "tag": "wan",
+    "owner": "",
+    "history": {
+      "lives-kept": 1,
+      "buckets-kept": 15,
+      "filter": "all",
+      "hours-of-statistics-kept": 2,
+      "distributions-of-statistics-kept": 2,
+      "statistics-distribution-interval": "5ms",
+      "enhanced": {
+        "interval": "60s",
+        "buckets": 100
+      }
+    },
+    "schedule": {
+      "life": "forever",
+      "start-time": "now",
+      "ageout": "0s",
+      "recurring": false
+    },
+    "react": [
+      {
+        "element": "rtt",
+        "threshold-type": "consecutive",
+        "count": 3,
+        "x": 5,
+        "y": 5,
+        "upper": 300,
+        "lower": 200,
+        "action": "trap"
+      }
+    ]
+  },
+  "life_start": "2026-09-27T10:00:00Z",
+  "life_index": 1
+}

@@ -1,0 +1,11 @@
+IPSLA operation id:            103
+Type of operation:             icmp-echo
+Target address:                10.100.1.13
+Tag:                           lan
+Latest RTT:                    Unknown
+Latest operation start time:   -
+Latest operation return code:  Unknown
+Number of successes:           0
+Number of failures:            0
+Operational state:             pending
+Life start:                    2026-09-27 10:00:00 UTC (life 1)

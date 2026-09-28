@@ -1,0 +1,113 @@
+# goipslad configuration example (/etc/goipslad/config.yaml).
+#
+# Every key and its default is described in docs/config.md. Check a file with
+#
+#   goipsla validate /etc/goipslad/config.yaml
+#
+# and apply changes to a running daemon with "goipsla reload" (or SIGHUP,
+# "systemctl reload goipslad"). An invalid file is not applied: the daemon
+# keeps the running configuration.
+#
+# Replace the example addresses (192.0.2.0/24, 198.51.100.0/24,
+# 2001:db8::/32, example.invalid) with your own.
+
+global:
+  # Unix socket of the control API used by goipsla. The systemd unit creates
+  # /run/goipslad. The socket is 0660, so goipsla needs root or the socket's
+  # group.
+  api-socket: /run/goipslad/goipslad.sock
+
+  # Hand the socket to this group so that its members can run goipsla
+  # without sudo. The daemon must belong to the group (systemd:
+  # SupplementaryGroups=goipsla); see packaging/systemd/README.md.
+  # api-socket-group: goipsla
+
+  # Prometheus /metrics. "" disables the exporter. Listen on a routable
+  # address only behind a firewall: the endpoint has no authentication.
+  metrics-listen: 127.0.0.1:9818
+
+  log:
+    format: text # text or json
+    level: info # debug, info, warn or error
+
+  # Send reaction and tracking events to the local syslog (/dev/log).
+  # Remove the key to disable syslog.
+  syslog: { facility: local0 }
+
+  # CISCO-RTTMON-MIB over AgentX (read only) and rttMonNotification traps.
+  # Needs "master agentx" in snmpd.conf (docs/snmp.md). Remove the key to
+  # disable SNMP.
+  # snmp:
+  #   agentx: /var/agentx/master
+  #   traps:
+  #     - { host: 192.0.2.10, community: public }
+
+# Templates hold the settings shared by many operations. An operation that
+# names a template takes every key from it and may override any of them.
+templates:
+  wan-echo:
+    type: icmp-echo
+    frequency: 10s # 1s..604800s; must be longer than timeout
+    timeout: 2000ms # must be at least threshold
+    threshold: 300ms # RTT above it is overThreshold (still a completion)
+    tos: 0xB8 # IPv4 ToS; traffic-class for IPv6
+    tag: wan
+    history:
+      hours-of-statistics-kept: 2 # hourly aggregated statistics
+      distributions-of-statistics-kept: 5 # distribution buckets per hour
+      statistics-distribution-interval: 20ms
+      enhanced: { interval: 60s, buckets: 60 } # sub-hour aggregation
+    react:
+      # action is the notification: syslog (needs global.syslog), trap
+      # (needs global.snmp.traps), trap-and-syslog or none. With the snmp
+      # block above enabled, use trap-and-syslog.
+      # Three RTTs in a row above 300 ms raise threshold-exceeded; it clears
+      # when an RTT drops below 200 ms.
+      - { element: rtt, threshold-type: consecutive, count: 3, upper: 300, lower: 200, action: syslog }
+      # Every timeout raises threshold-exceeded.
+      - { element: timeout, threshold-type: immediate, action: syslog }
+
+operations:
+  # One operation written in full. The ID is the index used by goipsla and
+  # SNMP: write it explicitly and do not reuse it for another target.
+  - id: 1
+    type: icmp-jitter # ICMP Timestamp; IPv4 only
+    target: 198.51.100.1
+    interval: 20ms # between the packets of a burst
+    num-packets: 10 # packets per burst
+    frequency: 30s
+    timeout: 2000ms
+    threshold: 100ms # compared with the mean RTT of a burst
+    tag: voice
+
+  # Many targets from one template: "ID: address".
+  - template: wan-echo
+    targets:
+      101: 192.0.2.1
+      102: 192.0.2.2
+      103: "2001:db8::1"
+
+  # The same template with a source interface and a VRF, and an explicit
+  # schedule (without schedule an operation starts at load time and runs
+  # forever; Cisco's default is start-time pending, life 3600).
+  - template: wan-echo
+    source-interface: eth1
+    vrf: blue # Linux VRF device
+    schedule: { start-time: now, life: forever }
+    targets:
+      201: 192.0.2.11
+      202: 192.0.2.12
+
+# Object tracking (Cisco "track N ip sla M"): Up / Down from the latest
+# return code, with optional delays before a change takes effect.
+tracks:
+  - { id: 1, operation: 101, mode: reachability, delay: { up: 10s, down: 5s } }
+
+# Notifications for the events. The JSON body and the environment of exec
+# are described in docs/events.md.
+actions:
+  - on: [track-down, track-up]
+    track: 1
+    webhook: https://example.invalid/hooks/goipsla
+  - on: [threshold-exceeded, threshold-cleared]
+    exec: /usr/local/libexec/ipsla-notify.sh

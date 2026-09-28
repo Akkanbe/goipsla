@@ -1,0 +1,12 @@
+# Build context for packaging/docker/Dockerfile (BuildKit reads
+# <Dockerfile>.dockerignore next to the Dockerfile). Only the Go sources and
+# the example configuration are needed.
+*
+!go.mod
+!go.sum
+!cmd/
+!internal/
+!tools/
+!packaging/config.example.yaml
+**/*_test.go
+**/testdata/

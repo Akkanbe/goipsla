@@ -1,0 +1,201 @@
+{
+  "id": 1,
+  "type": "icmp-jitter",
+  "target": "10.100.2.11",
+  "state": "active",
+  "latest": {
+    "valid": true,
+    "seq": 40,
+    "start": "2026-09-27T11:59:57Z",
+    "end": "2026-09-27T11:59:57.25Z",
+    "rtt_ms": 0.412,
+    "code": "ok",
+    "detail": "loss 1/10",
+    "jitter": {
+      "num_packets": 10,
+      "sent": 10,
+      "skipped": 0,
+      "num_rtt": 9,
+      "rtt_sum_ms": 4,
+      "rtt_sum2_ms": 4,
+      "rtt_min_ms": 0,
+      "rtt_max_ms": 1,
+      "rtt_avg_ms": 0.4444444444444444,
+      "num_over_threshold": 0,
+      "pos_sd": {
+        "num": 6,
+        "sum_ms": 1,
+        "sum2_ms": 1,
+        "min_ms": 0,
+        "max_ms": 1,
+        "avg_ms": 0.16666666666666666
+      },
+      "neg_sd": {
+        "num": 1,
+        "sum_ms": 1,
+        "sum2_ms": 1,
+        "min_ms": 1,
+        "max_ms": 1,
+        "avg_ms": 1
+      },
+      "pos_ds": {
+        "num": 7,
+        "sum_ms": 0,
+        "sum2_ms": 0,
+        "min_ms": 0,
+        "max_ms": 0,
+        "avg_ms": 0
+      },
+      "neg_ds": {
+        "num": 0,
+        "sum_ms": 0,
+        "sum2_ms": 0,
+        "min_ms": 0,
+        "max_ms": 0,
+        "avg_ms": 0
+      },
+      "avg_jitter_ms": 0.14285714285714285,
+      "avg_sd_jitter_ms": 0.2857142857142857,
+      "avg_ds_jitter_ms": 0,
+      "pkt_loss": 1,
+      "pkt_late_arrival": 0,
+      "pkt_out_seq_sd": 0,
+      "pkt_out_seq_ds": 0,
+      "pkt_out_seq_both": 0,
+      "min_suc_pkt_loss": 1,
+      "max_suc_pkt_loss": 1,
+      "one_way": false,
+      "num_ow": 0,
+      "ow_sd": {
+        "num": 0,
+        "sum_ms": 0,
+        "sum2_ms": 0,
+        "min_ms": 0,
+        "max_ms": 0,
+        "avg_ms": 0
+      },
+      "ow_ds": {
+        "num": 0,
+        "sum_ms": 0,
+        "sum2_ms": 0,
+        "min_ms": 0,
+        "max_ms": 0,
+        "avg_ms": 0
+      }
+    }
+  },
+  "totals": {
+    "initiations": 40,
+    "completions": 40,
+    "over_thresholds": 0,
+    "timeouts": 0,
+    "busies": 0,
+    "drops": 0,
+    "sequence_errors": 0,
+    "verify_errors": 0,
+    "successes": 40,
+    "failures": 0,
+    "rtt_sum_ms": 40,
+    "rtt_sum2_ms": 40,
+    "rtt_min_ms": 1,
+    "rtt_max_ms": 1,
+    "rtt_avg_ms": 1,
+    "rtt_stddev_ms": 0
+  },
+  "config": {
+    "id": 1,
+    "type": "icmp-jitter",
+    "target": "10.100.2.11",
+    "target-name": "10.100.2.11",
+    "tos": 0,
+    "frequency": "30s",
+    "timeout": "5000ms",
+    "threshold": "5000ms",
+    "interval": "20ms",
+    "num-packets": 10,
+    "tag": "",
+    "owner": "",
+    "history": {
+      "lives-kept": 0,
+      "buckets-kept": 15,
+      "filter": "none",
+      "hours-of-statistics-kept": 2,
+      "distributions-of-statistics-kept": 1,
+      "statistics-distribution-interval": "20ms",
+      "enhanced": null
+    },
+    "schedule": null,
+    "react": []
+  },
+  "life_start": "2026-09-27T10:00:00Z",
+  "life_index": 1,
+  "totals_jitter": {
+    "num_rtt": 396,
+    "rtt_sum_ms": 160,
+    "rtt_sum2_ms": 170,
+    "rtt_min_ms": 0,
+    "rtt_max_ms": 3,
+    "rtt_avg_ms": 0.40404040404040403,
+    "num_over_threshold": 0,
+    "pos_sd": {
+      "num": 300,
+      "sum_ms": 40,
+      "sum2_ms": 44,
+      "min_ms": 0,
+      "max_ms": 2,
+      "avg_ms": 0.13333333333333333
+    },
+    "neg_sd": {
+      "num": 50,
+      "sum_ms": 60,
+      "sum2_ms": 80,
+      "min_ms": 1,
+      "max_ms": 3,
+      "avg_ms": 1.2
+    },
+    "pos_ds": {
+      "num": 340,
+      "sum_ms": 10,
+      "sum2_ms": 10,
+      "min_ms": 0,
+      "max_ms": 1,
+      "avg_ms": 0.029411764705882353
+    },
+    "neg_ds": {
+      "num": 10,
+      "sum_ms": 10,
+      "sum2_ms": 10,
+      "min_ms": 1,
+      "max_ms": 1,
+      "avg_ms": 1
+    },
+    "avg_jitter_ms": 0.17142857142857143,
+    "avg_sd_jitter_ms": 0.2857142857142857,
+    "avg_ds_jitter_ms": 0.05714285714285714,
+    "pkt_loss": 4,
+    "pkt_late_arrival": 1,
+    "pkt_out_seq_sd": 0,
+    "pkt_out_seq_ds": 2,
+    "pkt_out_seq_both": 0,
+    "min_suc_pkt_loss": 1,
+    "max_suc_pkt_loss": 2,
+    "skipped": 0,
+    "num_ow": 0,
+    "ow_sd": {
+      "num": 0,
+      "sum_ms": 0,
+      "sum2_ms": 0,
+      "min_ms": 0,
+      "max_ms": 0,
+      "avg_ms": 0
+    },
+    "ow_ds": {
+      "num": 0,
+      "sum_ms": 0,
+      "sum2_ms": 0,
+      "min_ms": 0,
+      "max_ms": 0,
+      "avg_ms": 0
+    }
+  }
+}

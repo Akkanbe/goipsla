@@ -1,0 +1,7 @@
+Track 2
+  IP SLA 21 state
+  State is Down
+    Up pending (delay running)
+    1 change, last change 01:02:00
+  Latest operation return code: Over Threshold
+  Latest RTT (millisecs) 150.000

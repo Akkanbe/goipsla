@@ -1,0 +1,22 @@
+IPSLA operation id:            101
+Type of operation:             icmp-echo
+Target address:                10.100.1.11 (vrf blue)
+Tag:                           wan
+Latest RTT:                    1.234 milliseconds
+Latest operation start time:   2026-09-27 11:57:50 UTC
+Latest operation return code:  OK
+Number of successes:           115
+Number of failures:            5
+Operational state:             active
+Life start:                    2026-09-27 10:00:00 UTC (life 1)
+Initiations:                   120
+Completions:                   118
+Over thresholds:               3
+Timeouts:                      2
+Busies:                        0
+Drops:                         0
+Sequence errors:               0
+Verify errors:                 0
+RTT Min/Avg/Max:               1/2.000/9 milliseconds
+RTT standard deviation:        1.042 milliseconds
+RTT sum / sum of squares:      236 / 600

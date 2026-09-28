@@ -1,0 +1,12 @@
+{
+  "id": 1,
+  "operation": 13,
+  "mode": "reachability",
+  "state": "up",
+  "changes": 2,
+  "last_change": "2026-09-27T11:59:13Z",
+  "latest_rc": "ok",
+  "latest_rtt_ms": 4,
+  "delay_up": "5s",
+  "delay_down": "0s"
+}

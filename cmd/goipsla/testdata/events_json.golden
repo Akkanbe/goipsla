@@ -1,0 +1,21 @@
+[
+  {
+    "time": "2026-09-27T11:59:00Z",
+    "kind": "track-down",
+    "op_id": 13,
+    "type": "",
+    "target": "10.100.1.13",
+    "track_id": 1,
+    "track_state": "down",
+    "message": "%TRACK-6-STATE: 1 ip sla 13 reachability Up -\u003e Down"
+  },
+  {
+    "time": "2026-09-27T11:59:05Z",
+    "kind": "threshold-exceeded",
+    "op_id": 13,
+    "type": "",
+    "target": "10.100.1.13",
+    "element": "timeout",
+    "message": "%RTT-4-OPER_TIMEOUT: IP SLAs(13): Threshold exceeded for timeout"
+  }
+]

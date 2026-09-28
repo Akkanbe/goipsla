@@ -1,0 +1,11 @@
+{
+  "version": "1.2.3",
+  "started_at": "2026-09-27T10:30:00Z",
+  "config_path": "/etc/goipslad/goipslad.yaml",
+  "operations": {
+    "total": 4,
+    "active": 3,
+    "pending": 1,
+    "inactive": 0
+  }
+}

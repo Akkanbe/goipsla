@@ -1,0 +1,26 @@
+global:
+  api-sockt: /run/x.sock
+  log: { format: xml }
+templates:
+  t:
+    id: 3
+    type: icmp-echo
+    frequency: 60
+operations:
+  - id: 1
+    type: icmp-echo
+    target: router1.example.com
+  - id: 1
+    type: icmp-echo
+    target: 192.0.2.1
+  - template: missing
+    targets: { 10: 192.0.2.10 }
+  - template: t
+    id: 4
+    targets: { 11: 192.0.2.11 }
+    target: 192.0.2.12
+tracks:
+  - { id: 1, operation: 99, mode: up }
+actions:
+  - on: [track-sideways]
+    track: 2

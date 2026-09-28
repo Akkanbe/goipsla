@@ -1,0 +1,59 @@
+# goipslad configuration for the staging environment (staging/compose.yaml).
+# Six targets, each over IPv4 and IPv6: 12 icmp-echo operations built from
+# one template with the "targets" form (ID: address), plus two icmp-jitter
+# operations (31 local, 32 behind the router). Statistics, history and
+# enhanced history are enabled so that goipsla show has something to show.
+global:
+  # /run/goipslad does not exist in the source container: keep the socket
+  # under the repository, which is mounted at /work.
+  api-socket: /work/staging/run/goipslad.sock
+  # Prometheus exporter, reachable from the host and the other containers.
+  metrics-listen: 0.0.0.0:9818
+  log: { format: text, level: info }
+  # The source container has no syslog daemon (/dev/log): the syslog sink
+  # logs one connection warning and keeps retrying without blocking the
+  # other sinks (p5-verify.sh checks this).
+  syslog: { facility: local0 }
+templates:
+  lab:
+    type: icmp-echo
+    frequency: 5s
+    timeout: 2000ms
+    threshold: 100ms
+    tag: lab
+    history:
+      lives-kept: 2
+      buckets-kept: 15
+      filter: all
+      hours-of-statistics-kept: 2
+      distributions-of-statistics-kept: 5
+      statistics-distribution-interval: 10ms
+      enhanced: { interval: 60s, buckets: 10 }
+    react:
+      - { element: rtt, threshold-type: immediate, upper: 100, lower: 50, action: syslog }
+      - { element: timeout, threshold-type: consecutive, count: 2, action: syslog }
+operations:
+  - template: lab
+    targets: { 11: 10.100.1.11, 12: 10.100.1.12, 13: 10.100.1.13,
+               21: 10.100.2.11, 22: 10.100.2.12, 23: 10.100.2.13 }
+  - template: lab
+    targets: { 111: "fd00:100:1::11", 112: "fd00:100:1::12", 113: "fd00:100:1::13",
+               121: "fd00:100:2::11", 122: "fd00:100:2::12", 123: "fd00:100:2::13" }
+  - { id: 31, type: icmp-jitter, target: 10.100.1.11, interval: 20ms, num-packets: 10,
+      frequency: 10s, timeout: 2000ms, threshold: 100ms, tag: lab,
+      react: [ { element: rtt, threshold-type: immediate, upper: 100, lower: 50, action: syslog },
+               { element: timeout, threshold-type: consecutive, count: 2, action: syslog } ] }
+  - { id: 32, type: icmp-jitter, target: 10.100.2.11, interval: 20ms, num-packets: 10,
+      frequency: 10s, timeout: 2000ms, threshold: 100ms, tag: lab,
+      react: [ { element: rtt, threshold-type: immediate, upper: 100, lower: 50, action: syslog },
+               { element: timeout, threshold-type: consecutive, count: 2, action: syslog } ] }
+# Object tracking: 1 follows tgt-l3 (reachability, up 5 s after recovery),
+# 2 follows tgt-r1 (state: overThreshold counts as down).
+tracks:
+  - { id: 1, operation: 13, mode: reachability, delay: { up: 5s, down: 0s } }
+  - { id: 2, operation: 21, mode: state }
+# Every notification goes to the staging hook, which appends the event JSON
+# to staging/run/hooks.log.
+actions:
+  - on: [track-up, track-down, threshold-exceeded, threshold-cleared]
+    exec: /work/staging/scripts/hook.sh

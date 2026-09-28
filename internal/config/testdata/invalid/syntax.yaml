@@ -1,0 +1,3 @@
+operations:
+  - id: 1
+   type: icmp-echo

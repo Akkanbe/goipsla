@@ -1,0 +1,14 @@
+Operation 101 (icmp-echo 10.100.1.11)
+INDEX  START     RTTs  MIN/AVG/MAX  SUCC  FAIL  OVERTH  TIMEOUT  BUSY  DROP  SEQERR  VERERR
+1      10:00:00  59    1/2.000/9    58    2     1       1        0     0     0       0
+2      11:00:00  59    1/2.000/4    57    3     2       1        1     0     0       0
+
+Distribution of hour group 1:
+RANGE   COMPLETIONS  OVERTH  %     AVG(ms)
+0-<5ms  58           0       98.3  1.879
+>=5ms   1            0       1.7   9.000
+
+Distribution of hour group 2:
+RANGE   COMPLETIONS  OVERTH  %      AVG(ms)
+0-<5ms  59           0       100.0  2.000
+>=5ms   0            0       0.0    -

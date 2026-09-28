@@ -1,0 +1,14 @@
+Operation 1 (icmp-jitter 10.100.2.11)
+no history buckets
+
+Operation 101 (icmp-echo 10.100.1.11)
+LIFE  BUCKET  SAMPLE  START     RTT(ms)  SENSE    TARGET
+1     14      1       11:57:30  2        ok       10.100.1.11
+1     15      1       11:57:40  0        timeout  10.100.1.11
+1     16      1       11:57:50  1        ok       10.100.1.11
+
+Operation 102 (icmp-echo fd00:100:2::11)
+no history buckets
+
+Operation 103 (icmp-echo 10.100.1.13)
+no history buckets

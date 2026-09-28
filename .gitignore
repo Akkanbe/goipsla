@@ -1,0 +1,83 @@
+# ---- Go build output ----
+# output of make build / make dist / go build
+/bin/
+/dist/
+/goipslad
+/goipsla
+/probe-echo
+/metrics-get
+# leftovers of go build without -o (in cmd/ and tools/)
+/cmd/goipslad/goipslad
+/cmd/goipsla/goipsla
+/tools/probe-echo/probe-echo
+/tools/metrics-get/metrics-get
+
+# ---- tests and profiles ----
+*.test
+*.out
+*.prof
+*.pprof
+/coverage.*
+/testdata/fuzz/
+**/testdata/fuzz/
+
+# ---- runtime files of the staging environment ----
+# API socket, lock, daemon logs, temporary configurations of the check scripts
+/staging/run/
+
+# ---- local working files ----
+*.log
+*.bak
+*.orig
+*.rej
+*.tmp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.env
+.env.*
+
+# ---- editors / IDEs ----
+.idea/
+.vscode/
+*.iml
+
+# ---- Claude Code local settings, locks, personal skills ----
+.claude/settings.local.json
+.claude/*.lock
+.claude/scheduled_tasks.lock
+.claude/skills/
+
+# ---- internal working records of the implementation harness (not published) ----
+/docs/tasks/
+/docs/reviews/
+/CLAUDE.md
+
+# ---- third-party MIB files (obtain them locally; see docs/snmp.md, "MIB files") ----
+/mibs/
+
+# ---- credentials and private keys (never commit) ----
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+.netrc
+*.secret
+/secrets/
+
+# ---- local overrides of configurations ----
+*.local.yaml
+*.local.yml
+/staging/compose.override.yaml
+/staging/compose.override.yml
+
+# ---- Go workspace files (local multi-module setups) ----
+/go.work
+/go.work.sum
+
+# ---- local caches of dependencies ----
+/vendor/

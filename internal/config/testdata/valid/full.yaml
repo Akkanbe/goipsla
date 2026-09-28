@@ -1,0 +1,70 @@
+# Every key, with non-default values.
+global:
+  api-socket: /tmp/goipslad.sock
+  metrics-listen: ""
+  log: { format: json, level: debug }
+
+templates:
+  base:
+    type: icmp-echo
+    frequency: 30s
+    timeout: 1000ms
+    threshold: 500ms
+    request-data-size: 100
+    data-pattern: 0x01020304
+    verify-data: true
+    owner: noc
+    history:
+      lives-kept: 1
+      buckets-kept: 60
+      filter: failures
+      hours-of-statistics-kept: 25
+      distributions-of-statistics-kept: 20
+      statistics-distribution-interval: 10ms
+      enhanced: { interval: 60s }
+    schedule: { life: 3600s, start-time: pending, ageout: 7200s }
+
+operations:
+  - id: 5
+    template: base
+    target: 2001:db8::5
+    source-ip: 2001:db8::1
+    traffic-class: 0x20
+    flow-label: 0xFFFFF
+    threshold: 200ms
+    tag: "v6 echo"
+    history: { enhanced: { buckets: 10 } }
+    schedule: { life: forever }
+    react:
+      - { element: rtt, threshold-type: xofy, x: 3, y: 10, action: trap-and-syslog }
+      - { element: verifyError, threshold-type: consecutive, count: 2, action: syslog }
+  - id: 2
+    type: icmp-jitter
+    target: 192.0.2.2
+    source-ip: 192.0.2.254
+    source-interface: eth0
+    vrf: red
+    tos: 184
+    frequency: 10s
+    timeout: 2000ms
+    threshold: 1000ms
+    interval: 50ms
+    num-packets: 100
+    one-way-delay: true
+    schedule: { start-time: "after 00:10:00", life: 12h, recurring: false }
+    react:
+      - { element: jitterAvg, threshold-type: average, count: 16, upper: 30, lower: 10 }
+      - { element: packetLoss, threshold-type: immediate }
+      - { element: maxOfLatencySD }
+
+tracks:
+  - { id: 20, operation: 5 }
+  - { id: 10, operation: 2, mode: state, delay: { down: 180s } }
+
+actions:
+  - on: [threshold-exceeded, threshold-cleared]
+    exec: /bin/true
+  - on: [track-up]
+    track: 20
+    webhook: http://127.0.0.1:8080/hook
+    exec: /usr/bin/logger

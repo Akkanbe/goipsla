@@ -1,0 +1,4 @@
+operations:
+  - id: 7
+    type: icmp-echo
+    target: 192.0.2.1

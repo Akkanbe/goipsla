@@ -1,0 +1,40 @@
+id: 101
+type: icmp-echo
+target: 10.100.1.11
+target-name: 10.100.1.11
+template: wan-echo
+source-interface: eth1
+vrf: blue
+tos: 184
+frequency: 10s
+timeout: 2000ms
+threshold: 300ms
+request-data-size: 28
+data-pattern: 0xABCDABCD
+verify-data: false
+tag: wan
+owner: ""
+history:
+  lives-kept: 1
+  buckets-kept: 15
+  filter: all
+  hours-of-statistics-kept: 2
+  distributions-of-statistics-kept: 2
+  statistics-distribution-interval: 5ms
+  enhanced:
+    interval: 60s
+    buckets: 100
+schedule:
+  life: forever
+  start-time: now
+  ageout: 0s
+  recurring: false
+react:
+  - element: rtt
+    threshold-type: consecutive
+    count: 3
+    x: 5
+    y: 5
+    upper: 300
+    lower: 200
+    action: trap

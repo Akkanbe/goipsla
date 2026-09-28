@@ -1,0 +1,47 @@
+# The example of docs/implementation-plan.md section 3.5, verbatim.
+global:
+  api-socket: /run/goipslad/goipslad.sock
+  metrics-listen: 127.0.0.1:9818
+  syslog: { facility: local0 }
+  snmp:
+    agentx: /var/agentx/master
+    traps: [ { host: 192.0.2.10, community: public } ]
+
+templates:
+  wan-echo:
+    type: icmp-echo
+    frequency: 10s
+    timeout: 2000ms
+    threshold: 300ms
+    tos: 0xB8
+    tag: wan
+    react:
+      - { element: rtt, threshold-type: consecutive, count: 3, upper: 300, lower: 200, action: trap }
+      - { element: timeout, threshold-type: immediate, action: trap }
+
+operations:
+  - id: 1
+    type: icmp-jitter
+    target: 10.100.2.11
+    interval: 20ms
+    num-packets: 10
+    frequency: 30s
+
+  # define many targets at once with one template
+  - template: wan-echo
+    source-interface: eth1
+    vrf: blue
+    targets:
+      101: 10.100.1.11
+      102: 10.100.1.12
+      103: fd00:100:2::11
+
+tracks:
+  - { id: 1, operation: 101, mode: reachability, delay: { up: 10s, down: 5s } }
+
+actions:
+  - on: [track-down, track-up]
+    track: 1
+    webhook: https://example.invalid/hook
+  - on: [threshold-exceeded]
+    exec: /usr/local/libexec/ipsla-notify.sh

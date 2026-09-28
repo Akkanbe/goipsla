@@ -1,0 +1,2 @@
+ID   TYPE       TARGET       TAG  STATE   RC  RTT(ms)  LAST      SUCC  FAIL  AVG(ms)  JIT(ms)  LOSS
+101  icmp-echo  10.100.1.11  wan  active  ok  1.234    2m9s ago  115   5     2.000    -        -

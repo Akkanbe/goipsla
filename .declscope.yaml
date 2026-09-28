@@ -1,0 +1,6 @@
+# declscope configuration (2026-09-27: the naming rule enabled at the user's request)
+# boundary / surplus / unused stay at their defaults (on / strict / strict).
+rules:
+  naming:
+    qualify: ondemand   # require the namespace in names once a package has two or more namespaces
+    exported: true      # check exported declarations too (inside the package they read bare)

@@ -1,0 +1,60 @@
+# goipslad: IP SLA (ICMP) measurement daemon.
+#
+# Install: /usr/local/bin/goipslad and /usr/local/bin/goipsla, this file as
+# /etc/systemd/system/goipslad.service, the configuration as
+# /etc/goipslad/config.yaml. See packaging/systemd/README.md.
+
+[Unit]
+Description=goipslad IP SLA (ICMP) measurement daemon
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/goipslad --config /etc/goipslad/config.yaml
+# SIGHUP reloads the configuration file (same as "goipsla reload").
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=5s
+
+# An unprivileged, transient user. The only privilege is CAP_NET_RAW, for the
+# raw ICMP sockets and for binding them to a VRF device (SO_BINDTODEVICE).
+DynamicUser=yes
+AmbientCapabilities=CAP_NET_RAW
+CapabilityBoundingSet=CAP_NET_RAW
+NoNewPrivileges=yes
+
+# /run/goipslad holds the API socket (global.api-socket, the default
+# /run/goipslad/goipslad.sock); /etc/goipslad is read-only to the service.
+RuntimeDirectory=goipslad
+RuntimeDirectoryMode=0755
+ConfigurationDirectory=goipslad
+# Files the service creates are not world-readable. The API socket's mode is
+# set explicitly (0660) and does not depend on it.
+UMask=0027
+
+# AF_NETLINK: interface names (source-interface, IPv6 zones) are resolved
+# with netlink. AF_UNIX: the API socket, syslog and AgentX over a Unix socket.
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+
+[Install]
+WantedBy=multi-user.target

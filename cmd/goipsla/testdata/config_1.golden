@@ -1,0 +1,22 @@
+id: 1
+type: icmp-jitter
+target: 10.100.2.11
+target-name: 10.100.2.11
+tos: 0
+frequency: 30s
+timeout: 5000ms
+threshold: 5000ms
+interval: 20ms
+num-packets: 10
+tag: ""
+owner: ""
+history:
+  lives-kept: 0
+  buckets-kept: 15
+  filter: none
+  hours-of-statistics-kept: 2
+  distributions-of-statistics-kept: 1
+  statistics-distribution-interval: 20ms
+  enhanced: null
+schedule: null
+react: []

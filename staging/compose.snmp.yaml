@@ -1,0 +1,35 @@
+# P7: net-snmp's snmpd (AgentX master) and snmptrapd next to the staging
+# nodes. An override of compose.yaml that only adds services, so starting it
+# with explicit service names leaves the existing containers alone:
+#
+#   docker compose -f compose.yaml -f compose.snmp.yaml up -d --build snmpd trapd
+#   docker compose -f compose.yaml -f compose.snmp.yaml stop snmpd trapd
+#
+#   snmpd  10.100.1.20  udp/161 SNMP, tcp/705 AgentX master
+#   trapd  10.100.1.21  udp/162 traps (logged to stdout)
+services:
+  snmpd:
+    build: ./snmp
+    image: ipsla-staging-snmp:latest
+    container_name: ipsla-snmpd
+    hostname: snmpd
+    init: true
+    command: ["snmpd", "-f", "-Lo", "-C", "-c", "/etc/snmp-staging/snmpd.conf"]
+    volumes:
+      - ./snmp:/etc/snmp-staging:ro
+      - ../mibs:/mibs:ro
+    networks:
+      seg-local: { ipv4_address: 10.100.1.20 }
+
+  trapd:
+    build: ./snmp
+    image: ipsla-staging-snmp:latest
+    container_name: ipsla-trapd
+    hostname: trapd
+    init: true
+    command: ["snmptrapd", "-f", "-Lo", "-C", "-c", "/etc/snmp-staging/snmptrapd.conf", "udp:162"]
+    volumes:
+      - ./snmp:/etc/snmp-staging:ro
+      - ../mibs:/mibs:ro
+    networks:
+      seg-local: { ipv4_address: 10.100.1.21 }

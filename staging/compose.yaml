@@ -1,0 +1,115 @@
+# IP SLA (ICMP) staging environment
+#
+#   seg-local  10.100.1.0/24  fd00:100:1::/64   same L2 segment as the source
+#   seg-remote 10.100.2.0/24  fd00:100:2::/64   segment behind the router
+#
+#   source (.10) ── seg-local ──┬── tgt-l1..l3 (.11-.13)
+#                               └── router (.254) ── seg-remote ── tgt-r1..r3 (.11-.13)
+#
+# .1 / ::1 on each network is the bridge gateway on the Docker host side.
+name: ipsla-staging
+
+x-node: &node
+  build: ./node
+  image: ipsla-staging-node:latest
+  init: true
+  cap_add: [NET_ADMIN, NET_RAW]
+  restart: unless-stopped
+
+# Disable ICMP rate limiting (so path-echo Time Exceeded messages and consecutive jitter replies are not thinned out)
+x-icmp-sysctls: &icmp-sysctls
+  net.ipv4.icmp_ratelimit: "0"
+  net.ipv6.icmp.ratelimit: "0"
+  net.ipv4.icmp_echo_ignore_all: "0"
+
+x-local-target: &local-target
+  <<: *node
+  sysctls: *icmp-sysctls
+
+x-remote-target: &remote-target
+  <<: *node
+  sysctls: *icmp-sysctls
+  environment:
+    # The remote side sends all traffic through the router
+    ROUTES: "default via 10.100.2.254"
+    ROUTES6: "default via fd00:100:2::254"
+
+services:
+  source:
+    <<: *node
+    container_name: ipsla-source
+    hostname: source
+    sysctls: *icmp-sysctls
+    environment:
+      ROUTES: "10.100.2.0/24 via 10.100.1.254"
+      ROUTES6: "fd00:100:2::/64 via fd00:100:1::254"
+    volumes:
+      - ..:/work          # run the implemented software in this container
+    working_dir: /work
+    networks:
+      seg-local: { ipv4_address: 10.100.1.10, ipv6_address: "fd00:100:1::10" }
+
+  router:
+    <<: *node
+    container_name: ipsla-router
+    hostname: router
+    sysctls:
+      <<: *icmp-sysctls
+      net.ipv4.ip_forward: "1"
+      net.ipv6.conf.all.forwarding: "1"
+    networks:
+      seg-local:  { ipv4_address: 10.100.1.254, ipv6_address: "fd00:100:1::254" }
+      seg-remote: { ipv4_address: 10.100.2.254, ipv6_address: "fd00:100:2::254" }
+
+  # ---- targets on the same L2 segment as the source ----
+  tgt-l1:
+    <<: *local-target
+    container_name: ipsla-tgt-l1
+    hostname: tgt-l1
+    networks: { seg-local: { ipv4_address: 10.100.1.11, ipv6_address: "fd00:100:1::11" } }
+  tgt-l2:
+    <<: *local-target
+    container_name: ipsla-tgt-l2
+    hostname: tgt-l2
+    networks: { seg-local: { ipv4_address: 10.100.1.12, ipv6_address: "fd00:100:1::12" } }
+  tgt-l3:
+    <<: *local-target
+    container_name: ipsla-tgt-l3
+    hostname: tgt-l3
+    networks: { seg-local: { ipv4_address: 10.100.1.13, ipv6_address: "fd00:100:1::13" } }
+
+  # ---- targets on the segment behind the router ----
+  tgt-r1:
+    <<: *remote-target
+    container_name: ipsla-tgt-r1
+    hostname: tgt-r1
+    depends_on: [router]
+    networks: { seg-remote: { ipv4_address: 10.100.2.11, ipv6_address: "fd00:100:2::11" } }
+  tgt-r2:
+    <<: *remote-target
+    container_name: ipsla-tgt-r2
+    hostname: tgt-r2
+    depends_on: [router]
+    networks: { seg-remote: { ipv4_address: 10.100.2.12, ipv6_address: "fd00:100:2::12" } }
+  tgt-r3:
+    <<: *remote-target
+    container_name: ipsla-tgt-r3
+    hostname: tgt-r3
+    depends_on: [router]
+    networks: { seg-remote: { ipv4_address: 10.100.2.13, ipv6_address: "fd00:100:2::13" } }
+
+networks:
+  seg-local:
+    name: ipsla-seg-local
+    enable_ipv6: true
+    ipam:
+      config:
+        - { subnet: 10.100.1.0/24, gateway: 10.100.1.1 }
+        - { subnet: "fd00:100:1::/64", gateway: "fd00:100:1::1" }
+  seg-remote:
+    name: ipsla-seg-remote
+    enable_ipv6: true
+    ipam:
+      config:
+        - { subnet: 10.100.2.0/24, gateway: 10.100.2.1 }
+        - { subnet: "fd00:100:2::/64", gateway: "fd00:100:2::1" }

@@ -1,0 +1,5 @@
+ID   TYPE         TARGET          TAG  STATE    RC       RTT(ms)  LAST      SUCC  FAIL  AVG(ms)  JIT(ms)  LOSS
+1    icmp-jitter  10.100.2.11     -    active   ok       0.412    2s ago    40    0     1.000    0.143    1/10
+101  icmp-echo    10.100.1.11     wan  active   ok       1.234    2m9s ago  115   5     2.000    -        -
+102  icmp-echo    fd00:100:2::11  wan  active   timeout  -        6s ago    0     12    -        -        -
+103  icmp-echo    10.100.1.13     lan  pending  -        -        -         0     0     -        -        -
